@@ -3,6 +3,7 @@ import { iconsById } from "./icons.generated";
 interface Env {
   ASSETS: Fetcher;
   ICONS: R2Bucket;
+  DOWNLOAD_LIMITER: RateLimit;
 }
 
 // Static assets are matched first by the platform; this fetch handler only runs
@@ -10,7 +11,7 @@ interface Env {
 export default {
   async fetch(request, env): Promise<Response> {
     const url = new URL(request.url);
-    if (url.pathname === "/api/download") return handleDownload(url, env);
+    if (url.pathname === "/api/download") return handleDownload(request, url, env);
     if (url.pathname.startsWith("/preview/")) return handlePreview(url, env);
     return env.ASSETS.fetch(request);
   },
@@ -19,7 +20,17 @@ export default {
 // The full/ prefix is deliberately absent from the client manifest; ids are
 // resolved to keys here so no user input reaches R2. hasOwn, not a plain
 // lookup, so "constructor" and friends can't resolve.
-async function handleDownload(url: URL, env: Env): Promise<Response> {
+async function handleDownload(request: Request, url: URL, env: Env): Promise<Response> {
+  // Clicking download occasionally stays well under this; a script harvesting
+  // the full-resolution library trips it within seconds. The preview tier is
+  // deliberately left unlimited — fast grid panning fires many image requests
+  // at once and would false-positive real users.
+  const client = request.headers.get("CF-Connecting-IP") ?? "anonymous";
+  const { success } = await env.DOWNLOAD_LIMITER.limit({ key: client });
+  if (!success) {
+    return new Response("Too many requests", { status: 429, headers: { "Retry-After": "60" } });
+  }
+
   const id = url.searchParams.get("id");
   if (!id || !Object.hasOwn(iconsById, id)) return new Response("Not found", { status: 404 });
 

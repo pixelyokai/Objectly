@@ -80,6 +80,23 @@ a neutral template rather than an empty gap; `npm run check:descriptions` report
 it to `WEIGHTS` in `scripts/subset-fonts.mjs`, re-run `npm run subset:fonts`, and add a
 matching `@font-face` rule in `src/index.css`.
 
+## Security posture
+
+The site runs on a workers.dev subdomain rather than a custom domain, which
+means zone-level Cloudflare products (Bot Fight Mode, managed WAF rules,
+rate limiting rules) are not available — those require a domain added to your
+account as a zone.
+
+The protection that mattered most for this project is enforced in the Worker
+instead: `/api/download` is rate limited to 20 requests per minute per IP via
+a Workers rate limiting binding, which applies regardless of how the site is
+reached. The preview tier is deliberately left unlimited, because fast grid
+panning fires many image requests at once and a numeric threshold there would
+false-positive real users.
+
+If a custom domain is added later, the zone-level features become available and
+can layer on top of this without changing any code.
+
 ## Licence
 
 Icons are free for commercial use; attribution appreciated, not required.

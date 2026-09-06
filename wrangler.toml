@@ -13,6 +13,14 @@ binding = "ICONS"
 bucket_name = "objectly-icons"
 preview_bucket_name = "objectly-icons"
 
+# Zone-level rate limiting rules need a domain on Cloudflare, which a
+# workers.dev subdomain is not. This binding enforces the same limit inside the
+# Worker instead, so it applies regardless of how the site is reached.
+[[ratelimits]]
+name = "DOWNLOAD_LIMITER"
+namespace_id = "1001"
+simple = { limit = 20, period = 60 }
+
 # Without this, the Workers Logs tab stays empty and /api/download failures are
 # invisible in production.
 [observability]
