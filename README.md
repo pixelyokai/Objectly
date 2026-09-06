@@ -83,4 +83,7 @@ matching `@font-face` rule in `src/index.css`.
 ## Licence
 
 Icons are free for commercial use; attribution appreciated, not required.
-[Open Runde](https://github.com/lauridskern/open-runde) is OFL-1.1.
+[Open Runde](https://github.com/lauridskern/open-runde) is OFL-1.1. This repository is
+private and unlicensed for reuse; the MIT notices for bundled runtime dependencies
+(React, Motion, vaul, Lenis) are in [NOTICE.md](NOTICE.md), shipped at `/NOTICE.md`
+on the deployed site since MIT requires the notice travel with the distributed code.
