@@ -41,14 +41,14 @@ Home & Living · Marketing & Growth · Security & Privacy · Travel & Hospitalit
 Vite · React · TypeScript · Tailwind CSS · [Motion](https://motion.dev) ·
 [vaul](https://vaul.emilkowal.ski) · [Lenis](https://lenis.dev) ·
 [lucide-animated](https://lucide-animated.com) · [ThiingsGrid](https://github.com/charlieclark/thiings-grid)
-Deployed on Cloudflare Pages with assets on R2.
+Deployed on Cloudflare Workers (with static assets) and R2.
 
 ## Local development
 
 ```bash
 npm install
 npm run dev          # UI only
-npm run pages:dev    # app plus the download function, running as it does in production
+npm run worker:dev   # app plus the download route, running as it does in production
 ```
 
 Source icons live in `Assets/Images/<Pack Name>/<Icon Name>.png` and are **not committed** —
@@ -58,7 +58,7 @@ on first request in `node_modules/.cache/objectly-preview/`. Delete that folder 
 | Script | What it does |
 | --- | --- |
 | `npm run dev` | Vite dev server (regenerates manifests first) |
-| `npm run pages:dev` | Wrangler Pages dev |
+| `npm run worker:dev` | Build then `wrangler dev`, with R2 bindings live |
 | `npm run build` | Type-check and build to `dist/` |
 | `npm run generate:icons` | Rebuilds the manifests from `Assets/Images/` |
 | `npm run prepare:assets` | Writes the upload-ready asset tree; never touches sources |

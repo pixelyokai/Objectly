@@ -9,7 +9,7 @@ const icons = readIcons();
 
 for (const { id, category, file } of icons) {
   const source = join(SOURCE_DIR, category, file);
-  // Slugged key, matching functions/icons.generated.ts — no spaces in R2.
+  // Slugged key, matching worker/icons.generated.ts — no spaces in R2.
   const preview = join(OUT_DIR, "preview", `${id}.png`);
   const full = join(OUT_DIR, "full", `${id}.png`);
 
