@@ -16,6 +16,10 @@ export default function App() {
   const [selectedIcon, setSelectedIcon] = useState<Icon | null>(null);
   const [theme, toggleTheme] = useTheme();
   const gridRef = useRef<HTMLDivElement>(null);
+  // The drawer portals into the rounded card rather than the body, so it slides
+  // from the card's edge and is clipped by its corners instead of the viewport's.
+  // State, not a ref: the portal target must be resolved on a render pass.
+  const [container, setContainer] = useState<HTMLDivElement | null>(null);
 
   const debouncedQuery = useDebounced(query);
   const filteredIcons = useFilteredIcons(selectedCategories, debouncedQuery);
@@ -42,7 +46,10 @@ export default function App() {
 
   return (
     <div className="h-full p-2">
-      <div className="relative h-full overflow-hidden rounded-2xl bg-white shadow-[0_0_0_1px_rgb(0_0_0/0.10)] dark:bg-neutral-900 dark:shadow-[0_0_0_1px_rgb(255_255_255/0.10)]">
+      <div
+        ref={setContainer}
+        className="relative h-full overflow-hidden rounded-2xl bg-white shadow-[0_0_0_1px_rgb(0_0_0/0.10)] dark:bg-neutral-900 dark:shadow-[0_0_0_1px_rgb(255_255_255/0.10)]"
+      >
         <EdgeBlur />
 
         <div className="pointer-events-none absolute inset-0 z-30 flex flex-col">
@@ -72,6 +79,7 @@ export default function App() {
         onClose={() => setSelectedIcon(null)}
         onExplore={exploreCategory}
         restoreFocusTo={gridRef}
+        container={container}
       />
     </div>
   );

@@ -14,17 +14,25 @@ type IconDrawerProps = {
   onClose: () => void;
   onExplore: (category: string) => void;
   restoreFocusTo: RefObject<HTMLElement | null>;
+  container: HTMLElement | null;
 };
 
 // Controlled, not Drawer.Trigger — the trigger is a cell inside ThiingsGrid's
 // virtualized renderer and can unmount while the drawer is open.
-export function IconDrawer({ icon, onClose, onExplore, restoreFocusTo }: IconDrawerProps) {
+export function IconDrawer({ icon, onClose, onExplore, restoreFocusTo, container }: IconDrawerProps) {
   return (
     // autoFocus: vaul opts out of Radix's open-focus by default, which leaves focus
     // on the grid cell behind the drawer and defeats the focus trap.
-    <Drawer.Root autoFocus open={icon !== null} onOpenChange={(open) => !open && onClose()}>
+    // container: portal into the rounded card so the drawer travels from the card's
+    // bottom edge and is clipped by its corners, not the viewport's.
+    <Drawer.Root
+      autoFocus
+      container={container}
+      open={icon !== null}
+      onOpenChange={(open) => !open && onClose()}
+    >
       <Drawer.Portal>
-        <Drawer.Overlay className="drawer-overlay fixed inset-0 z-40 bg-black/25" />
+        <Drawer.Overlay className="drawer-overlay absolute inset-0 z-40 bg-black/25" />
         <Drawer.Content
           // Radix restores focus to the trigger, but the trigger is a virtualized
           // grid cell that has usually unmounted by now — send it to the grid instead.
@@ -32,7 +40,7 @@ export function IconDrawer({ icon, onClose, onExplore, restoreFocusTo }: IconDra
             event.preventDefault();
             restoreFocusTo.current?.focus();
           }}
-          className="drawer-surface fixed inset-x-2 bottom-2 z-50 mx-auto max-w-[769px] rounded-xl bg-white shadow-surface outline-none dark:bg-neutral-800 dark:shadow-surface-dark"
+          className="drawer-surface absolute inset-x-2 bottom-4 z-50 mx-auto max-w-[769px] rounded-xl bg-white shadow-surface outline-none dark:bg-neutral-800 dark:shadow-surface-dark"
         >
           {icon && <DrawerBody icon={icon} onClose={onClose} onExplore={onExplore} />}
         </Drawer.Content>
