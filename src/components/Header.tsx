@@ -49,7 +49,9 @@ export function Header({
           whileHover={reduced ? undefined : { scale: 1.15, rotate: -6 }}
           whileTap={reduced ? undefined : { scale: 0.95 }}
           transition={reduced ? NONE : CELL}
-          className="grid h-7 w-7 place-items-center rounded-lg text-neutral-400 transition-colors hover:text-neutral-900 dark:text-neutral-500 dark:hover:text-neutral-100"
+          // Full black / full white at rest, so hover feedback moves to opacity
+          // rather than colour — there's no darker black to travel to.
+          className="grid h-7 w-7 place-items-center rounded-lg text-black transition-opacity hover:opacity-70 dark:text-white"
         >
           <svg viewBox="0 0 16 16" width="16" height="16" fill="currentColor" aria-hidden>
             <path d={X_PATH} />
