@@ -1,0 +1,12 @@
+node_modules
+dist
+dist-assets
+.wrangler
+.env*
+Assets/Images/
+public/assets/Images/
+*.local
+*.tsbuildinfo
+
+# Internal planning doc, not part of the published project
+objectly-build-spec.md

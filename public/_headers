@@ -1,0 +1,6 @@
+# Hashed bundles and immutable brand/font files.
+/assets/*
+  Cache-Control: public, max-age=31536000, immutable
+
+/api/download
+  Cache-Control: private, no-store

@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Objectly | High-Quality Free 3D Icon Packs</title>
+    <meta
+      name="description"
+      content="A free, premium 3D icon library with multiple packs spanning Ecommerce, Finance, AI, and more. Attribution appreciated, not required, free for commercial use."
+    />
+
+    <link rel="icon" href="/assets/Brand/favicon-light.png" media="(prefers-color-scheme: light)" />
+    <link rel="icon" href="/assets/Brand/favicon-dark.png" media="(prefers-color-scheme: dark)" />
+
+    <meta property="og:title" content="Objectly | High-Quality Free 3D Icon Packs" />
+    <meta
+      property="og:description"
+      content="A free, premium 3D icon library with multiple packs spanning Ecommerce, Finance, AI, and more. Attribution appreciated, not required, free for commercial use."
+    />
+    <!-- TODO: swap for https://cdn.objectly.com/brand/og-image.png once R2 is live. -->
+    <meta property="og:image" content="/assets/Brand/og-image.png" />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <link rel="preload" as="font" type="font/woff2" href="/assets/OpenRunde/OpenRunde-Regular.woff2" crossorigin />
+    <link rel="preload" as="font" type="font/woff2" href="/assets/OpenRunde/OpenRunde-Medium.woff2" crossorigin />
+    <script>
+      // Applied before paint so the first frame isn't the wrong theme.
+      if (
+        localStorage.theme === "dark" ||
+        (!localStorage.theme && matchMedia("(prefers-color-scheme: dark)").matches)
+      )
+        document.documentElement.classList.add("dark");
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
