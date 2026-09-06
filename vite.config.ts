@@ -13,12 +13,14 @@ const CACHE_DIR = "node_modules/.cache/objectly-preview";
 // decodes 240 full-resolution PNGs and the grid drag stutters.
 function servePreviews(): Plugin {
   const prefix = "/assets/images/";
-  // Requests use the slugged R2 key; map it back to the real source filename.
-  const sources = new Map(readIcons().map((icon) => [`${icon.id}.png`, join(SOURCE_DIR, icon.category, icon.file)]));
   return {
     name: "objectly-preview-images",
     apply: "serve",
     configureServer(server) {
+      // Read inside configureServer, not at config-eval time: `vite build`
+      // also evaluates this file, and CI has no Assets/Images/ to scan.
+      // Requests use the slugged R2 key; map it back to the real source filename.
+      const sources = new Map(readIcons().map((icon) => [`${icon.id}.png`, join(SOURCE_DIR, icon.category, icon.file)]));
       server.middlewares.use(async (req, res, next) => {
         const url = req.url ?? "";
         if (!url.toLowerCase().startsWith(prefix)) return next();

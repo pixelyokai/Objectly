@@ -1,5 +1,14 @@
-import { writeFileSync } from "node:fs";
-import { readIcons } from "./icons-lib.mjs";
+import { existsSync, writeFileSync } from "node:fs";
+import { readIcons, SOURCE_DIR } from "./icons-lib.mjs";
+
+// CI environments (Cloudflare Pages/Workers builds) never have Assets/Images/ —
+// it is 258MB of source PNGs and deliberately gitignored. The already-committed
+// manifests are the build artifact in that case; only local dev, which has the
+// real source tree, needs to regenerate them.
+if (!existsSync(SOURCE_DIR)) {
+  console.log(`${SOURCE_DIR} not found — using the committed manifests as-is.`);
+  process.exit(0);
+}
 
 const icons = readIcons();
 
