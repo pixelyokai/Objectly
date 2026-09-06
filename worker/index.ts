@@ -11,6 +11,7 @@ export default {
   async fetch(request, env): Promise<Response> {
     const url = new URL(request.url);
     if (url.pathname === "/api/download") return handleDownload(url, env);
+    if (url.pathname.startsWith("/preview/")) return handlePreview(url, env);
     return env.ASSETS.fetch(request);
   },
 } satisfies ExportedHandler<Env>;
@@ -31,6 +32,28 @@ async function handleDownload(url: URL, env: Env): Promise<Response> {
       "Content-Type": "image/png",
       "Content-Disposition": `attachment; filename="${name}.png"`,
       "Cache-Control": "private, no-store",
+    },
+  });
+}
+
+// Public and cacheable by design — this is the low-value tier the site's grid
+// runs on. Still resolved through the manifest, not the raw URL, so a request
+// can't walk the bucket outside its preview/ prefix.
+//
+// max-age is long but not "immutable": the key (icon id) is stable even if the
+// underlying artwork is ever replaced, so a genuine content change relies on
+// this TTL expiring or an edge-cache purge, not on a new filename.
+async function handlePreview(url: URL, env: Env): Promise<Response> {
+  const id = url.pathname.slice("/preview/".length).replace(/\.png$/, "");
+  if (!Object.hasOwn(iconsById, id)) return new Response("Not found", { status: 404 });
+
+  const object = await env.ICONS.get(`preview/${iconsById[id].key}`);
+  if (!object) return new Response("Not found", { status: 404 });
+
+  return new Response(object.body, {
+    headers: {
+      "Content-Type": "image/png",
+      "Cache-Control": "public, max-age=2592000",
     },
   });
 }

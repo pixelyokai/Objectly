@@ -39,8 +39,14 @@ export function SmoothWheel({ children }: { children: ReactNode }) {
       last[axis] = instance.animatedScroll;
       if (delta === 0) return;
 
+      // host.firstElementChild is IconGrid's own wrapper, not ThiingsGrid's
+      // container — its wheel listener sits one level deeper, and a bubbling
+      // dispatch from an ancestor never reaches a descendant. touch-action:none
+      // is a stable fingerprint for that container (see ThiingsGrid.tsx); found
+      // fresh each time in case ThiingsGrid ever remounts.
+      const target_ = host.querySelector<HTMLElement>('[style*="touch-action"]');
       synthetic = true;
-      host.firstElementChild?.dispatchEvent(
+      target_?.dispatchEvent(
         new WheelEvent("wheel", {
           deltaX: axis === "x" ? delta : 0,
           deltaY: axis === "y" ? delta : 0,

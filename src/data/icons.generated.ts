@@ -2,9 +2,19 @@
 export type Icon = { id: string; name: string; category: string; previewSrc: string };
 
 // Preview resolution only. Full-resolution keys live server-side (worker/index.ts).
+//
+// Dev (vite dev): served from Assets/Images/ by the servePreviews plugin in
+// vite.config.ts, downscaled on first request — no R2 involved.
+// Build (deployed, or wrangler dev): same-origin /preview/<key>, served by the
+// Worker straight off the R2 binding (see worker/index.ts). VITE_ASSET_CDN_URL
+// is an optional override for routing previews through a dedicated CDN
+// subdomain instead, once that's worth the extra DNS and R2 custom-domain setup.
 const CDN = import.meta.env.VITE_ASSET_CDN_URL;
-const asset = (path: string) =>
-  CDN ? `${CDN.endsWith("/") ? CDN.slice(0, -1) : CDN}/preview/${path}` : `/assets/Images/${path}`;
+const asset = (path: string) => {
+  if (import.meta.env.DEV) return `/assets/Images/${path}`;
+  if (CDN) return `${CDN.endsWith("/") ? CDN.slice(0, -1) : CDN}/preview/${path}`;
+  return `/preview/${path}`;
+};
 
 export const icons: Icon[] = [
   { id: "ai/ai-chip", name: "AI Chip", category: "AI", previewSrc: asset("ai/ai-chip.png") },
