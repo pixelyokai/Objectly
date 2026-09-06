@@ -7,6 +7,13 @@ directory = "dist"
 binding = "ASSETS"
 not_found_handling = "single-page-application"
 
+# Same bucket for preview deploys; the preview URL should show real icons.
 [[r2_buckets]]
 binding = "ICONS"
 bucket_name = "objectly-icons"
+preview_bucket_name = "objectly-icons"
+
+# Without this, the Workers Logs tab stays empty and /api/download failures are
+# invisible in production.
+[observability]
+enabled = true

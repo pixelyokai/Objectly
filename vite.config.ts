@@ -55,4 +55,7 @@ export default defineConfig({
   // preview middleware entirely.
   server: { fs: { deny: ["**/Assets/**", "**/dist-assets/**"] } },
   resolve: { alias: { "@": fileURLToPath(new URL("./src", import.meta.url)) } },
+  // Hashed output lives under /build/ so it can be cached immutably without the
+  // rule also catching the unhashed brand files under /assets/.
+  build: { assetsDir: "build" },
 });

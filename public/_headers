@@ -1,6 +1,11 @@
-# Hashed bundles and immutable brand/font files.
-/assets/*
+# Content-hashed bundles: safe to cache forever, the filename changes on rebuild.
+/build/*
   Cache-Control: public, max-age=31536000, immutable
 
-/api/download
-  Cache-Control: private, no-store
+# Subset fonts: stable filenames, but rename on change if you ever swap them.
+/assets/OpenRunde/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# Logo, favicons, OG image: unhashed, so keep these refreshable.
+/assets/Brand/*
+  Cache-Control: public, max-age=86400

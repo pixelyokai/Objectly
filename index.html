@@ -17,9 +17,12 @@
       property="og:description"
       content="A free, premium 3D icon library with multiple packs spanning Ecommerce, Finance, AI, and more. Attribution appreciated, not required, free for commercial use."
     />
-    <!-- TODO: swap for https://cdn.objectly.com/brand/og-image.png once R2 is live. -->
-    <meta property="og:image" content="/assets/Brand/og-image.png" />
+    <!-- Absolute URLs: social scrapers do not resolve relative paths. -->
+    <meta property="og:url" content="https://objectly.co/" />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content="https://objectly.co/assets/Brand/og-image.png" />
     <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:image" content="https://objectly.co/assets/Brand/og-image.png" />
 
     <link rel="preload" as="font" type="font/woff2" href="/assets/OpenRunde/OpenRunde-Regular.woff2" crossorigin />
     <link rel="preload" as="font" type="font/woff2" href="/assets/OpenRunde/OpenRunde-Medium.woff2" crossorigin />
